@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtualenv
+venv/
+.env/
+.env.*
+
+# Logs
+*.log
+
+# SQLite (caso use depois)
+*.sqlite3
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Docker
+*.pid
+*.sock
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+
+# Test / coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Secrets
+.env
+.env.local
+
+# Misc
+*.swp
