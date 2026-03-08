@@ -1,43 +1,46 @@
 require("dotenv").config()
+
 const express = require("express")
-const axios = require("axios")
+const { sendMessage } = require("./zapi")
 
 const app = express()
 app.use(express.json())
 
-const BASE_URL = "https://api.z-api.io"
+// webhook que a Z-API vai chamar
+app.post("/webhook", async (req, res) => {
 
-app.post("/send-message", async (req, res) => {
     try {
 
-        const { phone, message } = req.body
+        const data = req.body
 
-        const url = `${BASE_URL}/instances/${process.env.ZAPI_INSTANCE_ID}/token/${process.env.ZAPI_INSTANCE_TOKEN}/send-text`
+        console.log("Mensagem recebida:", data)
 
-        const response = await axios.post(
-            url,
-            {
-                phone: phone,
-                message: message
-            },
-            {
-                headers: {
-                    "Client-Token": process.env.ZAPI_CLIENT_TOKEN,
-                    "Content-Type": "application/json"
-                }
-            }
-        )
+        const phone = data.phone
+        const message = data.text?.message?.toLowerCase()
 
-        res.json(response.data)
+        if (!message) {
+            return res.sendStatus(200)
+        }
+
+        if (message === "oi") {
+
+            await sendMessage(
+                phone,
+                "Olá 👋\n\nBem-vindo! Como posso ajudar você hoje?"
+            )
+
+        }
+
+        res.sendStatus(200)
 
     } catch (error) {
 
-        res.status(500).json({
-            error: error.response?.data || error.message
-        })
+        console.error(error)
+        res.sendStatus(500)
+
     }
 })
 
 app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000")
+    console.log("Webhook rodando na porta 3000")
 })
